@@ -14,12 +14,10 @@ KEY_CODES = {
   72: 'h',
   77: 'm',
   80: 'p'
-}
+};
 
 KEY_STATUS = { keyDown:false };
-for (code in KEY_CODES) {
-  KEY_STATUS[KEY_CODES[code]] = false;
-}
+for (code in KEY_CODES) KEY_STATUS[KEY_CODES[code]] = false;
 
 $(window).keydown(function (e) {
   KEY_STATUS.keyDown = true;
@@ -60,7 +58,7 @@ Matrix = function (rows, columns) {
         k++;
       }
     }
-  }
+  };
 
   this.multiply = function () {
     var vector = new Array(rows);
@@ -110,7 +108,7 @@ Sprite = function () {
   // collide with coins, but they can also spawn on top of coins.
   this.getInterference = function () {
     return this.collidesWith;
-  }
+  };
 
   this.x     = 0;
   this.y     = 0;
@@ -240,9 +238,7 @@ Sprite = function () {
 
     this.context.lineWidth = 1.0 / this.scale;
 
-    for (child in this.children) {
-      this.children[child].draw();
-    }
+    for (child in this.children) this.children[child].draw();
 
     this.context.strokeStyle = this.color;
     this.context.fillStyle = this.color;
@@ -318,7 +314,7 @@ Sprite = function () {
           oddNodes = !oddNodes;
         }
       }
-      j += 2
+      j += 2;
       if (j == points.length) j = 0;
     }
     return oddNodes;
@@ -408,7 +404,7 @@ Ship = function () {
   this.collidesWith = ["asteroid", "bigalien", "alienbullet", "coin"];
   this.getInterference = function () {
     return ["asteroid", "bigalien", "alienbullet"];
-  }
+  };
 
   this.shoot = function() {
     for (var i = 0; i < this.bullets.length; i++) {
@@ -427,7 +423,7 @@ Ship = function () {
         break;
       }
     }
-  }
+  };
 
   this.preMove = function (delta) {
     if (KEY_STATUS.left) {
@@ -718,7 +714,7 @@ Asteroid = function () {
       roid.move(roid.scale * 3); // give them a little push
       Game.sprites.push(roid);
     }
-  }
+  };
 
   this.collision = function (other) {
     SFX.explosion();
@@ -749,7 +745,7 @@ Coin = function () {
 
   this.newValue = function () {
     this.value = Math.floor(Math.random() * 10 + 1) * 10;
-  }
+  };
 
   this.setup = function () {
     this.newPosition();
@@ -765,7 +761,7 @@ Coin = function () {
     this.newValue();
   }
 
-}
+};
 Coin.prototype = new Sprite();
 
 Explosion = function () {
@@ -851,7 +847,7 @@ GridNode = function () {
     var ref = this;
     while (ref.nextSprite) {
       ref = ref.nextSprite;
-      empty = !ref.visible || collidables.indexOf(ref.name) == -1
+      empty = !ref.visible || collidables.indexOf(ref.name) == -1;
       if (!empty) break;
     }
     return empty;
@@ -935,27 +931,25 @@ SFX = {
 };
 
 // preload audio
-for (var sfx in SFX) {
-  (function () {
-    var audio = SFX[sfx];
-    audio.muted = true;
-    audio.play();
+for (var sfx in SFX) (function () {
+  var audio = SFX[sfx];
+  audio.muted = true;
+  audio.play();
 
-    SFX[sfx] = function () {
-      if (!this.muted) {
-        if (audio.duration == 0) {
-          // somehow dropped out
-          audio.load();
-          audio.play();
-        } else {
-          audio.muted = false;
-          audio.currentTime = 0;
-        }
+  SFX[sfx] = function () {
+    if (!this.muted) {
+      if (audio.duration == 0) {
+        // somehow dropped out
+        audio.load();
+        audio.play();
+      } else {
+        audio.muted = false;
+        audio.currentTime = 0;
       }
-      return audio;
     }
-  })();
-}
+    return audio;
+  }
+})();
 // pre-mute audio
 SFX.muted = true;
 
